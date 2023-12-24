@@ -38,9 +38,9 @@ const postStudent = async (req, res) => {
     const student = new Student(req.body);
     try {
         await student.save();
-        res.send("succeeded to save student in post request")
+        res.status(201).json({message:"succeeded to save student in post request"})
     } catch (err) {
-        res.send("Failed to save student... message: " + err.message);
+        res.status(409).send("Failed to save student... message: " + err.message);
     }
 
 
@@ -50,7 +50,7 @@ const putStudentById = async (req, res) => {
     console.log("about to PUT/UPDATE student by ID: " + req.params.id);
     try {
        const  student = await Student.findByIdAndUpdate(req.params.id, new Student(req.body), {returnOriginal : false});
-       student ?  res.send("update successfully the student: " + student) :  res.send("update failed for student with ID: " + req.params.id);
+       student ?  res.status(200).json({message: "update successfully the student: ", student: student}) :  res.send("update failed for student with ID: " + req.params.id);
     } catch (err) {
         res.status(500).json({message: err.message});
     }
@@ -61,7 +61,7 @@ const deleteStudentById = async (req, res) => {
     try{
         const student =  await Student.findByIdAndDelete(req.params.id);
         console.log("deleted successfully student: ", student);
-        res.status(200).json("Student: " + student + " has been deleted successfully")
+        res.status(200).json({message: "Student with ID: " + req.params.id + " has been deleted successfully", student: student})
     } catch (err) {
         res.status(500).json({message: err.message});
     }

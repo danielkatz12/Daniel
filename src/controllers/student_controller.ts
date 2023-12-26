@@ -1,14 +1,13 @@
-const Student = require("../models/student_model");
-const e = require("express");
-const {log} = require("debug");
+import Student from "../models/student_model";
+import {Request, Response} from "express";
 // const mongoose = require("mongoose");
 
 
-const getAllStudents = async (req, res) => {
+const getAllStudents = async (req : Request, res: Response) => {
 
     console.log("get all students");
     try {
-        let students = "";
+        let students;
         if(req.query.name){
             students = await Student.find({name: req.query.name})
         } else {
@@ -22,7 +21,7 @@ const getAllStudents = async (req, res) => {
 
 }
 
-const getStudentById = async (req, res) => {
+const getStudentById = async (req : Request, res: Response) => {
     console.log("get student by ID: " + req.params.id);
     try {
         const student = await Student.findById(req.params.id);
@@ -33,7 +32,7 @@ const getStudentById = async (req, res) => {
     }
 }
 
-const postStudent = async (req, res) => {
+const postStudent = async (req : Request, res: Response) => {
     console.log("post student ", req.body);
     const student = new Student(req.body);
     try {
@@ -46,7 +45,7 @@ const postStudent = async (req, res) => {
 
 }
 
-const putStudentById = async (req, res) => {
+const putStudentById = async (req : Request, res: Response) => {
     console.log("about to PUT/UPDATE student by ID: " + req.params.id);
     try {
        const  student = await Student.findByIdAndUpdate(req.params.id, new Student(req.body), {returnOriginal : false});
@@ -56,7 +55,7 @@ const putStudentById = async (req, res) => {
     }
 }
 
-const deleteStudentById = async (req, res) => {
+const deleteStudentById = async (req : Request, res: Response) => {
     console.log("about to delete student with id: " + req.params.id);
     try{
         const student =  await Student.findByIdAndDelete(req.params.id);
@@ -68,7 +67,7 @@ const deleteStudentById = async (req, res) => {
 }
 
 
-module.exports = {
+export default {
     getAllStudents,
     getStudentById,
     postStudent,

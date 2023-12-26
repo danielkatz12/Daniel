@@ -1,17 +1,17 @@
-const express = require('express')
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const studentRouter = require("./routes/student_route"); //מוציא מתוך המודיול של express את מה שמוגדר כ-EXPORT ושם במשתנה שיצרתי כאן
+import express, {Express} from 'express';
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import studentRouter from "./routes/student_route"; //מוציא מתוך המודיול של express את מה שמוגדר כ-EXPORT ושם במשתנה שיצרתי כאן
 //const router = express.Router(); // כל ראוטר אנחנו יכולים להגדיר בקובץ בנפרד ולחבר אותו לאפליקציה. שלבים=> מייצרים קובץ ראוט עבור אותו שירות אותו אני רוצה לספק => מקבלת מהexpress את הראוטר => עבור הראוטר הזה אני מגדירה את של השירותים אותם אני מספקת עבור אובייקט אחד => בסוף הקובץ עושה export לrouter שלי => לבסוף אני מייבאת את הראוטר הזה בקובץ הראשי (בapp.js במקרה שלנו) ועל מנת להשתמשש בו אני עושה app.use
 
-const dotenv = require("dotenv").config();// כאן אנו טוענים את מה שבקובץ ה- env. למה שנקרא process  (שהוא למעשה הcontext של האפליקצייה- האובייקט הראשי שמריץ את האפליקצייה, ובגלל שהוא הראשי, אז הוא נגיש לכל המודולים באפליקצייה. )
+import env from "dotenv";
+
+env.config();// כאן אנו טוענים את מה שבקובץ ה- env. למה שנקרא process  (שהוא למעשה הcontext של האפליקצייה- האובייקט הראשי שמריץ את האפליקצייה, ובגלל שהוא הראשי, אז הוא נגיש לכל המודולים באפליקצייה. )
 // const port = process.env.PORT; //  PROCESS: THE MAIN CONTEXT of the aplication, we can call Process from each file in the project.
 
 
-
-
-const initApp = () => {
-    const promise = new Promise((resolve, reject) => {
+const initApp = (): Promise<Express> => {
+    const promise = new Promise<Express>((resolve, reject) => {
         const db = mongoose.connection;//
         db.on('error', (error) => console.log(error)); //יש 2 סוגי בעיות: בעיות בהתחברות הראשונית למשל עקב פורט או כתובת לא נכןנה או שמאיזשהי סיבה אחרת לא הצלחנו להתחבר.כאן המונגוס לא ינסה להתחבר שוב!!! , => סיבה שנייה זה לאחר שכן אנחנו מחוברים לDB פתאום החיבור מפסיק עקב בעיה. כאן המונגוס ינסה להתחבר מחדש!!
         db.once('open', () => console.log("Connected to Database"));
@@ -43,4 +43,4 @@ const initApp = () => {
     });
     return promise;
 }
-module.exports = initApp;
+export default initApp;

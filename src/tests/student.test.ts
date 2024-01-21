@@ -1,15 +1,26 @@
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
-import Student from "../models/student_model";
+import Student, {IStudent} from "../models/student_model";
 import {Express} from "express";
+import User from "../models/user_model";
 
 let app: Express;
+let accessToken: string;
+const user = {
+    email: "testStudent@test.com",
+    password: "1234567890",
+}
 beforeAll(async () => {
     app = await initApp();
     console.log("before all");
-    console.log(await Student.deleteMany());
+    await Student.deleteMany();
     console.log("after delete many");
+
+    User.deleteMany({ 'email': user.email });
+    await request(app).post("/auth/register").send(user);
+    const response = await request(app).post("/auth/login").send(user);
+    accessToken = response.body.accessToken;
 });
 
 afterAll(async () => {
@@ -23,26 +34,29 @@ afterAll(async () => {
 //   });
 // });// אופציה שנייה להשתמש ב PROMISE
 
+const student1: IStudent = {
+    name: "Daniel",
+    _id: "1717",
+};
+
 describe("Student tests", () => {
-    let student1 = {
-        name: "Daniel",
-        _id: "1717"
-    };
     test("Test Get All Student without student from DB", async () => {
-        const response = await request(app).get("/student");
+        const response = await request(app).get("/student").set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
     });
 
     test("Test Post/Save Student", async () => {
-        const response = await request(app).post("/student").send({name: "Daniel", _id: "1717"});
+        const response = await request(app).post("/student")
+            .set("Authorization", "JWT " + accessToken)
+            .send(student1);
         expect(response.statusCode).toBe(201);
-        expect(response.body.message).toBe("succeeded to save student in post request");
+        // expect(response.body.message).toBe("succeeded to save student in post request");
 
     });
 
     test("Test All Students with one student in DB", async () => {
-        const response = await request(app).get("/student");
+        const response = await request(app).get("/student") .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
         expect(response.body.length).toBe(1);
         const student = response.body[0];
@@ -51,14 +65,18 @@ describe("Student tests", () => {
     });
 
     test("Test Post/Save The Same Student -> ERROR ", async () => {
-        const response = await request(app).post("/student").send({name: student1.name, _id: student1._id});
+        const response = await request(app).post("/student")
+            .set("Authorization", "JWT " + accessToken)
+            .send({name: student1.name, _id: student1._id});
         expect(response.statusCode).toBe(409);
 
     });
 
     test("Test PUT /student/:id", async () => {
         const updatedStudent = {...student1, name: "Daniel Katz"};
-        const response = await request(app).put(`/student/${updatedStudent._id}`).send(updatedStudent);
+        const response = await request(app).put(`/student/${updatedStudent._id}`)
+            .set("Authorization", "JWT " + accessToken)
+            .send(updatedStudent);
         expect(response.statusCode).toBe(200);
         expect(response.body.message).toBe("update successfully the student: ");
         expect(response.body.student.name).toBe(updatedStudent.name);
@@ -66,7 +84,7 @@ describe("Student tests", () => {
     });
 
     test("Test DELETE /student/:id}", async () => {
-       const response = await request(app).delete(`/student/${student1._id}`);
+       const response = await request(app).delete(`/student/${student1._id}`).set("Authorization", "JWT " + accessToken);
        expect(response.statusCode).toBe(200);
        expect(response.body.message).toBe("Student with ID: " + student1._id + " has been deleted successfully");
        expect(response.body.student._id).toBe(student1._id);

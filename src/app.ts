@@ -5,10 +5,11 @@ import studentRouter from "./routes/student_route"; //מוציא מתוך המו
 //const router = express.Router(); // כל ראוטר אנחנו יכולים להגדיר בקובץ בנפרד ולחבר אותו לאפליקציה. שלבים=> מייצרים קובץ ראוט עבור אותו שירות אותו אני רוצה לספק => מקבלת מהexpress את הראוטר => עבור הראוטר הזה אני מגדירה את של השירותים אותם אני מספקת עבור אובייקט אחד => בסוף הקובץ עושה export לrouter שלי => לבסוף אני מייבאת את הראוטר הזה בקובץ הראשי (בapp.js במקרה שלנו) ועל מנת להשתמשש בו אני עושה app.use
 
 import env from "dotenv";
-
 env.config();// כאן אנו טוענים את מה שבקובץ ה- env. למה שנקרא process  (שהוא למעשה הcontext של האפליקצייה- האובייקט הראשי שמריץ את האפליקצייה, ובגלל שהוא הראשי, אז הוא נגיש לכל המודולים באפליקצייה. )
 // const port = process.env.PORT; //  PROCESS: THE MAIN CONTEXT of the aplication, we can call Process from each file in the project.
 
+import studentPostRoute from "./routes/student_post_route";
+import authRoute from "./routes/auth_route";
 
 const initApp = (): Promise<Express> => {
     const promise = new Promise<Express>((resolve, reject) => {
@@ -16,6 +17,7 @@ const initApp = (): Promise<Express> => {
         db.on('error', (error) => console.log(error)); //יש 2 סוגי בעיות: בעיות בהתחברות הראשונית למשל עקב פורט או כתובת לא נכןנה או שמאיזשהי סיבה אחרת לא הצלחנו להתחבר.כאן המונגוס לא ינסה להתחבר שוב!!! , => סיבה שנייה זה לאחר שכן אנחנו מחוברים לDB פתאום החיבור מפסיק עקב בעיה. כאן המונגוס ינסה להתחבר מחדש!!
         db.once('open', () => console.log("Connected to Database"));
         mongoose.connect(process.env.DB_URL).then(() => {
+
 
             const app = express();// למעשה הexspress היא פונקצייה שאנחנו עכשיו קוראים לה
 
@@ -32,6 +34,9 @@ const initApp = (): Promise<Express> => {
 
             // const studentRouter = require("./routes/student_route");
             app.use('/student', studentRouter);//לבסוף אני מייבאת את הראוטר הזה בקובץ הראשי (בapp.js במקרה שלנו) ועל מנת להשתמש בו אני עושה app.use
+            app.use("/studentpost", studentPostRoute);
+            app.use("/auth", authRoute);
+
 
 // app.listen(port, () => {
 //    console.log(`App is now listening on port: ${port}!`)

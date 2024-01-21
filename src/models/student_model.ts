@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
-const studentSchema = new mongoose.Schema({
+export interface IStudent{
+    name: String;
+    _id: String;
+}
+
+const studentSchema = new mongoose.Schema<IStudent>({
     name: {
         type: String,
         require: true,
@@ -12,4 +17,4 @@ const studentSchema = new mongoose.Schema({
 });
 
 
-export default mongoose.model("Students", studentSchema);
+export default mongoose.model<IStudent>("Students", studentSchema);

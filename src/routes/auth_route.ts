@@ -62,6 +62,7 @@ import authController from "../controllers/auth_controller";
  *               $ref: '#/components/schemas/User'
  */
 router.post("/register", authController.register);
+router.post("/google", authController.googleSignin);//TODO: add Swagger comments!!!
 
 /**
  * @swagger
@@ -99,7 +100,7 @@ router.post("/register", authController.register);
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: The acess & refresh tokens
+ *         description: The access & refresh tokens
  *         content:
  *           application/json:
  *             schema:

@@ -10,6 +10,7 @@ env.config();// כאן אנו טוענים את מה שבקובץ ה- env. למ�
 
 import studentPostRoute from "./routes/student_post_route";
 import authRoute from "./routes/auth_route";
+import fileRoute from "./routes/file_route";
 
 const initApp = (): Promise<Express> => {
     const promise = new Promise<Express>((resolve, reject) => {
@@ -32,10 +33,26 @@ const initApp = (): Promise<Express> => {
 // שימי לב שחשוב שה- BodyParser יהיה כתוב לפני הROUTING כדי שנחלץ את המידע בפורמט שנרצה לפני שנתחיל להשתמש במידע בפונקציות
 // כל המידע שאנחנו מחלצים כאן, יתקבל כפרמטר req בפונקציות הrouting שלנו
 
+
+            //CORS - Cross-Origin Resource Sharing:
+            // By default a browser will block any request from a page of one domain to resources
+            // located at another domain.
+            //     CORS header can bypass this
+            // Need to add Access-Control-Allow-Origin header in the response
+            //To enable CORS in all responses we add a middleware
+            app.use((req, res, next) => {
+                res.header("Access-Control-Allow-Origin", "*");
+                res.header("Access-Control-Allow-Methods", "*");
+                res.header("Access-Control-Allow-Headers", "*");
+                next();
+            })
+
             // const studentRouter = require("./routes/student_route");
             app.use('/student', studentRouter);//לבסוף אני מייבאת את הראוטר הזה בקובץ הראשי (בapp.js במקרה שלנו) ועל מנת להשתמש בו אני עושה app.use
             app.use("/studentpost", studentPostRoute);
             app.use("/auth", authRoute);
+            app.use("/file", fileRoute);
+            app.use("/public", express.static("public"));
 
 
 // app.listen(port, () => {

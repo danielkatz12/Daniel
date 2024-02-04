@@ -3,6 +3,7 @@ import User from '../models/user_model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+
 const register = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;

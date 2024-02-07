@@ -15,14 +15,15 @@ module.exports = router;//עושה export לrouter שלי
 */
 
 // import Student from "../controllers/student_controller";
-import studentController from "../controllers/student_controller";
+// import userProfileDetailsController from "../controllers/user_profile_details_controller";
 import authMiddleware from "../common/auth_middleware";
+import userProfileDetailsController from "../controllers/user_profile_details_controller"
 
-router.get("/", authMiddleware, studentController.get.bind(studentController));
-router.get("/:id", authMiddleware, studentController.getById.bind(studentController));
-router.post("/", authMiddleware, studentController.post.bind(studentController));
-router.put("/:id", authMiddleware, studentController.putById.bind(studentController));
-router.delete("/:id", authMiddleware, studentController.deleteById.bind(studentController));
+router.get("/", authMiddleware, userProfileDetailsController.get.bind(userProfileDetailsController));
+router.get("/:id", authMiddleware, userProfileDetailsController.getById.bind(userProfileDetailsController));
+router.post("/", authMiddleware, userProfileDetailsController.post.bind(userProfileDetailsController));
+router.put("/:id", authMiddleware, userProfileDetailsController.putById.bind(userProfileDetailsController));
+router.delete("/:id", authMiddleware, userProfileDetailsController.deleteById.bind(userProfileDetailsController));
 
 
 // router.get("/", Student.getAllStudents);

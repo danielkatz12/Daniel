@@ -1,10 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, {Schema, Types} from "mongoose";
 
-export interface IUser {
-    email: string;
-    password: string;
-    imgUrl?: string;
+export interface IUser extends Document {
     _id?: string;
+    email: string;
+    password?: string;
     refreshTokens?: string[];
 }
 
@@ -15,11 +14,7 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     password: {
         type: String,
-        required: true,
-    },
-    imgUrl: {
-        type: String,
-        required: false
+        required: false,
     },
     refreshTokens: {
         type: [String],

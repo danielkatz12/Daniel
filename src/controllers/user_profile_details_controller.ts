@@ -1,11 +1,35 @@
-import StudentModel,{IStudent} from "../models/student_model";
+import UserProfileDetailsModel,{UserProfileDetailsData} from "../models/user_profile_details_model";
+import {BaseController} from "./base_controller";
+import {Request, Response} from "express";
+import {AuthRequest} from "../common/auth_middleware";
+
+class UserProfileDetailsController extends  BaseController<UserProfileDetailsData> {
+    constructor() {
+        super(UserProfileDetailsModel);
+    }
+    async post(req: AuthRequest, res: Response) {
+        console.log("post-User-Details:" + req.body);
+        const _id = req.user._id;
+        req.body.userId = _id;
+        super.post(req, res);
+    }
+    async deleteById(req : Request, res: Response) {
+        //todo: TO-IMPLEMENT: first you need to delete the image from the server -> transaction?
+         super.deleteById(req, res);
+    }
+}
+
+export default new UserProfileDetailsController();
+
+
+
+
+
 // import {Request, Response} from "express";
 // const mongoose = require("mongoose");
-
-
-import createController from "./base_controller";
-const studentController = createController<IStudent>(StudentModel);
-export default studentController
+// import createController from "./base_controller";
+// const userProfileDetailsController = createController<UserProfileDetailsData>(UserProfileDetailsModel);
+// export default userProfileDetailsController
 
 // const getAllStudents = async (req : Request, res: Response) => {
 //
@@ -69,8 +93,6 @@ export default studentController
 //         res.status(500).json({message: err.message});
 //     }
 // }
-
-
 // export default {
 //     getAllStudents,
 //     getStudentById,

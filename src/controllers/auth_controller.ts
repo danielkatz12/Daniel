@@ -16,6 +16,7 @@ const googleSignin = async (req: Request, res: Response) => {
         });
         const payload = ticket.getPayload();
         const email = payload?.email;
+        //register
         if (email != null) {
             let user = await User.findOne({ 'email': email });
             if (user == null) {
@@ -23,7 +24,6 @@ const googleSignin = async (req: Request, res: Response) => {
                     {
                         'email': email,
                         'password': '',
-                        'imgUrl': payload?.picture
                     });
             }
             const tokens = await generateTokens(user)
@@ -31,11 +31,11 @@ const googleSignin = async (req: Request, res: Response) => {
                 {
                     email: user.email,
                     _id: user._id,
-                    imgUrl: user.imgUrl,
                     ...tokens
                 })
         }
     } catch (err) {
+        console.log(err);
         return res.status(400).send(err.message);
     }
 
@@ -59,14 +59,14 @@ const register = async (req: Request, res: Response) => {
             {
                 'email': email,
                 'password': encryptedPassword,
-                'imgUrl': imgUrl
+                // 'imgUrl': imgUrl//todo: to-delete
             });
         const tokens = await generateTokens(rs2)
         res.status(201).send(
             {
                 email: rs2.email,
                 _id: rs2._id,
-                imgUrl: rs2.imgUrl,
+                // imgUrl: rs2.imgUrl,//todo: to-delete
                 ...tokens
             })
     } catch (err) {

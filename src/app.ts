@@ -1,7 +1,7 @@
 import express, {Express} from 'express';
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import studentRouter from "./routes/student_route"; //מוציא מתוך המודיול של express את מה שמוגדר כ-EXPORT ושם במשתנה שיצרתי כאן
+import userProfileDetailsRouter from "./routes/user_profile_details_route"; //מוציא מתוך המודיול של express את מה שמוגדר כ-EXPORT ושם במשתנה שיצרתי כאן
 //const router = express.Router(); // כל ראוטר אנחנו יכולים להגדיר בקובץ בנפרד ולחבר אותו לאפליקציה. שלבים=> מייצרים קובץ ראוט עבור אותו שירות אותו אני רוצה לספק => מקבלת מהexpress את הראוטר => עבור הראוטר הזה אני מגדירה את של השירותים אותם אני מספקת עבור אובייקט אחד => בסוף הקובץ עושה export לrouter שלי => לבסוף אני מייבאת את הראוטר הזה בקובץ הראשי (בapp.js במקרה שלנו) ועל מנת להשתמשש בו אני עושה app.use
 
 import env from "dotenv";
@@ -48,7 +48,7 @@ const initApp = (): Promise<Express> => {
             })
 
             // const studentRouter = require("./routes/student_route");
-            app.use('/student', studentRouter);//לבסוף אני מייבאת את הראוטר הזה בקובץ הראשי (בapp.js במקרה שלנו) ועל מנת להשתמש בו אני עושה app.use
+            app.use('/user.profile.details', userProfileDetailsRouter);//לבסוף אני מייבאת את הראוטר הזה בקובץ הראשי (בapp.js במקרה שלנו) ועל מנת להשתמש בו אני עושה app.use
             app.use("/studentpost", studentPostRoute);
             app.use("/auth", authRoute);
             app.use("/file", fileRoute);

@@ -13,8 +13,11 @@
     "testFile": "tsc && jest  --detectOpenHandles --forceExit --runInBand /src/tests/file.test.ts"
   },
   "dependencies": {
+    "@types/react-bootstrap": "^0.32.35",
+    "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
+    "bootstrap": "^5.3.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.3.1",
@@ -25,7 +28,8 @@
     "mongoose": "^8.0.3",
     "morgan": "~1.9.1",
     "multer": "^1.4.5-lts.1",
-    "pug": "2.0.0-beta11"
+    "pug": "2.0.0-beta11",
+    "react-bootstrap": "^2.10.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

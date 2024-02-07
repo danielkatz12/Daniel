@@ -39,7 +39,7 @@ describe("File Tests", () => {
     });
 
     test("delete file", async () => {
-        const filePath = "/public\\1707255413644.webp";
+        const filePath = "/public\\1707315205679.webp";
         console.log(filePath);
 
         try {

@@ -5,12 +5,15 @@ import userProfileDetailsRouter from "./routes/user_profile_details_route"; //מ
 //const router = express.Router(); // כל ראוטר אנחנו יכולים להגדיר בקובץ בנפרד ולחבר אותו לאפליקציה. שלבים=> מייצרים קובץ ראוט עבור אותו שירות אותו אני רוצה לספק => מקבלת מהexpress את הראוטר => עבור הראוטר הזה אני מגדירה את של השירותים אותם אני מספקת עבור אובייקט אחד => בסוף הקובץ עושה export לrouter שלי => לבסוף אני מייבאת את הראוטר הזה בקובץ הראשי (בapp.js במקרה שלנו) ועל מנת להשתמשש בו אני עושה app.use
 
 import env from "dotenv";
+
 env.config();// כאן אנו טוענים את מה שבקובץ ה- env. למה שנקרא process  (שהוא למעשה הcontext של האפליקצייה- האובייקט הראשי שמריץ את האפליקצייה, ובגלל שהוא הראשי, אז הוא נגיש לכל המודולים באפליקצייה. )
 // const port = process.env.PORT; //  PROCESS: THE MAIN CONTEXT of the aplication, we can call Process from each file in the project.
 
 import studentPostRoute from "./routes/student_post_route";
 import authRoute from "./routes/auth_route";
 import fileRoute from "./routes/file_route";
+import govRoute from "./routes/gov-route"
+import govController from "./controllers/gov-controller";
 
 const initApp = (): Promise<Express> => {
     const promise = new Promise<Express>((resolve, reject) => {
@@ -53,6 +56,7 @@ const initApp = (): Promise<Express> => {
             app.use("/auth", authRoute);
             app.use("/file", fileRoute);
             app.use("/public", express.static("public"));
+            app.use("/gov", govRoute);
 
 
 // app.listen(port, () => {

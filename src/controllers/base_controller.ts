@@ -25,11 +25,9 @@ export class BaseController<T>{
     }
 
     async getById(req : Request, res: Response) {
-        console.log("get student??? by ID: " + req.params.id);
         try {
-            const student = await this.model.findById(req.params.id);
-            console.log("enable null value -> will not be catching!! student: ", student)
-            res.send(student);
+            const obj = await this.model.findById(req.params.id);
+            res.send(obj);
         } catch (err) {
             res.status(500).json({message: err.message});
         }

@@ -1,17 +1,16 @@
-import UserProfileDetailsModel,{UserProfileDetailsData} from "../models/user_profile_details_model";
-import {BaseController} from "./base_controller";
+import UserProfileDetailsModel, {UserProfileDetailsData} from "../models/user_profile_details_model";
 import {Request, Response} from "express";
 import {AuthRequest} from "../common/auth_middleware";
+import {AuthBaseController} from "./auth-base-controller";
 
-class UserProfileDetailsController extends  BaseController<UserProfileDetailsData> {
+class UserProfileDetailsController extends  AuthBaseController<UserProfileDetailsData> {
     constructor() {
         super(UserProfileDetailsModel);
     }
-    async post(req: AuthRequest, res: Response) {
+
+    async insert(req: AuthRequest, res: Response) {
         console.log("post-User-Details:" + req.body);
-        const _id = req.user._id;
-        req.body.userId = _id;
-        super.post(req, res);
+        super.insert(req, res);
     }
     async deleteById(req : Request, res: Response) {
         //todo: TO-IMPLEMENT: first you need to delete the image from the server -> transaction?

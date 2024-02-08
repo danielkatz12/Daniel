@@ -21,7 +21,7 @@ import userProfileDetailsController from "../controllers/user_profile_details_co
 
 router.get("/", authMiddleware, userProfileDetailsController.get.bind(userProfileDetailsController));
 router.get("/:id", authMiddleware, userProfileDetailsController.getById.bind(userProfileDetailsController));
-router.post("/", authMiddleware, userProfileDetailsController.post.bind(userProfileDetailsController));
+router.post("/", authMiddleware, userProfileDetailsController.insert.bind(userProfileDetailsController));
 router.put("/:id", authMiddleware, userProfileDetailsController.putById.bind(userProfileDetailsController));
 router.delete("/:id", authMiddleware, userProfileDetailsController.deleteById.bind(userProfileDetailsController));
 

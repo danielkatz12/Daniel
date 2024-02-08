@@ -35,7 +35,7 @@ export class BaseController<T>{
         }
     }
 
-    async post(req : Request, res: Response) {
+    async insert(req : Request, res: Response) {
         console.log("post student ", req.body);
         // const student = new this.model(req.body);
         try {

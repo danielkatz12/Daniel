@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import User, {IUser} from '../models/user_model';
+import User, {UserData} from '../models/user_model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {Document} from "mongoose";
@@ -74,7 +74,7 @@ const register = async (req: Request, res: Response) => {
     }
 }
 
-const generateTokens = async (user: Document & IUser) => {
+const generateTokens = async (user: Document & UserData) => {
     const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
     const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
     if (user.refreshTokens == null) {

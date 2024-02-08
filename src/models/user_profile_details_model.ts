@@ -1,4 +1,5 @@
 import mongoose, {Schema, Types} from "mongoose";
+import {UserData} from "./user_model";
 
 
 export interface UserProfileDetailsData {
@@ -7,7 +8,7 @@ export interface UserProfileDetailsData {
     contactEmail?: String;
     contactPhoneNumber?: number;
     age?: number;
-    userId:  {type: typeof Types.ObjectId, ref: "User"}
+    user:  UserData
 }
 
 const userProfileDetailsSchema = new mongoose.Schema<UserProfileDetailsData>({
@@ -15,7 +16,7 @@ const userProfileDetailsSchema = new mongoose.Schema<UserProfileDetailsData>({
         type: String,
         required: true,
     },
-    userId: {
+    user: {
         type: Types.ObjectId,
         ref: 'User'
         //בגלל שאנו דרסנו את הid של מונגו (ע"י כתיבה id_) אז מספיק לציין את סוג הID ןאין צורך לציין דרישות.

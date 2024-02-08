@@ -1,7 +1,7 @@
 import express from "express";
 
 const router = express.Router();
-import studentPostController from "../controllers/student_post_controller";
+import PostController from "../controllers/post_controller";
 import authMiddleware from "../common/auth_middleware";
 
 
@@ -63,7 +63,7 @@ import authMiddleware from "../common/auth_middleware";
  *             schema:
  *               $ref: '#/components/schemas/StudentPost'
  */
-router.get("/", studentPostController.get.bind(studentPostController));
+router.get("/", PostController.get.bind(PostController));
 
 /**
  * @swagger
@@ -88,9 +88,15 @@ router.get("/", studentPostController.get.bind(studentPostController));
  *             schema:
  *               $ref: '#/components/schemas/StudentPost'
  */
-router.get("/:id", studentPostController.getById.bind(studentPostController));
-router.post("/", authMiddleware, studentPostController.post.bind(studentPostController));
-router.put("/:id", authMiddleware, studentPostController.putById.bind(studentPostController));
-router.delete("/:id", authMiddleware, studentPostController.deleteById.bind(studentPostController));
+
+router.get("/get-all", PostController.getAllPosts.bind(PostController));
+router.post("/", authMiddleware, PostController.insert.bind(PostController));
+router.get("/:id", PostController.getById.bind(PostController));
+router.get("/:id", PostController.getById.bind(PostController));
+router.put("/:id", authMiddleware, PostController.putById.bind(PostController));
+router.delete("/:id", authMiddleware, PostController.deleteById.bind(PostController));
+
+
+
 
 export default router;

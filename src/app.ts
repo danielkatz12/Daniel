@@ -9,10 +9,11 @@ import env from "dotenv";
 env.config();// כאן אנו טוענים את מה שבקובץ ה- env. למה שנקרא process  (שהוא למעשה הcontext של האפליקצייה- האובייקט הראשי שמריץ את האפליקצייה, ובגלל שהוא הראשי, אז הוא נגיש לכל המודולים באפליקצייה. )
 // const port = process.env.PORT; //  PROCESS: THE MAIN CONTEXT of the aplication, we can call Process from each file in the project.
 
-import studentPostRoute from "./routes/student_post_route";
+import postRoute from "./routes/post_route";
 import authRoute from "./routes/auth_route";
 import fileRoute from "./routes/file_route";
-import govRoute from "./routes/gov-route"
+import govRoute from "./routes/gov-route";
+import reviewRoute from "./routes/review_route"
 import govController from "./controllers/gov-controller";
 
 const initApp = (): Promise<Express> => {
@@ -51,12 +52,13 @@ const initApp = (): Promise<Express> => {
             })
 
             // const studentRouter = require("./routes/student_route");
-            app.use('/user.profile.details', userProfileDetailsRouter);//לבסוף אני מייבאת את הראוטר הזה בקובץ הראשי (בapp.js במקרה שלנו) ועל מנת להשתמש בו אני עושה app.use
-            app.use("/studentpost", studentPostRoute);
+            app.use('/user-profile-details', userProfileDetailsRouter);//לבסוף אני מייבאת את הראוטר הזה בקובץ הראשי (בapp.js במקרה שלנו) ועל מנת להשתמש בו אני עושה app.use
+            app.use("/post", postRoute);
             app.use("/auth", authRoute);
             app.use("/file", fileRoute);
             app.use("/public", express.static("public"));
             app.use("/gov", govRoute);
+            app.use("/review", reviewRoute);
 
 
 // app.listen(port, () => {

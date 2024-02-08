@@ -5,11 +5,12 @@ import {AuthRequest} from "../common/auth_middleware";
 import {Response} from "express";
 
 export class GovController {
+    private readonly GET_CITIES: string = 'https://data.gov.il/api/3/action/datastore_search?resource_id=5c78e9fa-c2e2-4771-93ff-7f400a12f7ba&include_total=false&limit=2000&offset=0&fields=שם_ישוב &distinct=true&sort=שם_ישוב';
 
     async getAllCities(req: AuthRequest, res: Response): Promise<void> {
         const username: string = req.user._id;
         try {
-            const allCities: string[] = (await axios.get(encodeURI(process.env.GET_CITIES))).data.result.records.map((cityGov: CityGov) => cityGov.שם_ישוב);
+            const allCities: string[] = (await axios.get(encodeURI(this.GET_CITIES))).data.result.records.map((cityGov: CityGov) => cityGov.שם_ישוב);
             console.log(`Get all cities by username ${username} ended successfully, Got ${allCities.length} cities to pass`);
             res.status(200).send(allCities);
         } catch (err) {

@@ -1,9 +1,9 @@
 import UserProfileDetailsModel, {UserProfileDetailsData} from "../models/user_profile_details_model";
-import {Request, Response} from "express";
+import {Response} from "express";
 import {AuthRequest} from "../common/auth_middleware";
 import {AuthBaseController} from "./auth-base-controller";
 
-class UserProfileDetailsController extends  AuthBaseController<UserProfileDetailsData> {
+class UserProfileDetailsController extends AuthBaseController<UserProfileDetailsData> {
     constructor() {
         super(UserProfileDetailsModel);
     }
@@ -12,16 +12,46 @@ class UserProfileDetailsController extends  AuthBaseController<UserProfileDetail
         console.log("post-User-Details:" + req.body);
         super.insert(req, res);
     }
-    async deleteById(req : Request, res: Response) {
+
+    async deleteById(req: AuthRequest, res: Response) {
         //todo: TO-IMPLEMENT: first you need to delete the image from the server -> transaction?
-         super.deleteById(req, res);
+        super.deleteById(req, res);
+    }
+
+    async getByUserId(req: AuthRequest, res: Response) {
+        try {
+            const user = await UserProfileDetailsModel.findOne({user: req.params.id}).exec();
+            if (user) {
+                console.log('User Details found:', user);
+                res.status(200).send(user);
+            } else {
+                console.log('User Details not found');
+                res.status(404).send('User Details not found')
+            }
+        } catch (error) {
+            console.error('Error fetching user:', error);
+            res.status(500).send(`Error fetching user:, ${error}`);
+        }
+    }
+
+    async updateByUserId(req: AuthRequest, res: Response) {
+        try {
+            const user = await UserProfileDetailsModel.findOneAndUpdate({user: req.params.id}, req.body,{returnOriginal: false}).exec();
+            if (user) {
+                console.log('Updated User Details successfully:', user);
+                res.status(200).send(user);
+            } else {
+                console.log('User Details not found');
+                res.status(404).send('User Details not found')
+            }
+        } catch (error) {
+            console.error('Error fetching user:', error);
+            res.status(500).send(`Error fetching user:, ${error}`);
+        }
     }
 }
 
 export default new UserProfileDetailsController();
-
-
-
 
 
 // import {Request, Response} from "express";

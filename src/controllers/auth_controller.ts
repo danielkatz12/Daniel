@@ -106,7 +106,12 @@ const login = async (req: Request, res: Response) => {
         }
 
         const tokens = await generateTokens(user)
-        return res.status(200).send(tokens);
+        return res.status(200).send(
+            {
+                email: user.email,
+                _id: user._id,
+                ...tokens
+            })
     } catch (err) {
         return res.status(400).send("error missing email or password");
     }
@@ -128,6 +133,7 @@ const logout = async (req: Request, res: Response) => {
             } else {
                 userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
                 await userDb.save();
+                console.log("logout successfully!")
                 return res.sendStatus(200);
             }
         } catch (err) {

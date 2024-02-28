@@ -56,32 +56,33 @@ router.delete('/delete-file', async (req, res) => {
         res.status(500).send('Error deleting file');
     }
 });
-router.get('/get', async (req, res) => {
-    try {
-        // Extract the URL of the file to be deleted from the request body or query parameters
-        const fileUrl = req.body.fileUrl || req.query.fileUrl;
 
-        // Extract the filename from the URL
-        const filename: string = path.basename(fileUrl);
-
-        // Construct the path to the image file
-        const imagePath: string = path.join(__dirname, '..', '..', 'public',  filename);
-
-
-
-        // Check if the file exists
-        if (fs.existsSync(imagePath)) {
-            // Delete the file asynchronously
-            res.status(200).sendFile(imagePath);
-            console.log('File get successfully');
-        } else {
-            // If the file doesn't exist, send an appropriate response
-            console.log('File not found');
-            res.status(404).send('File not found');
-        }
-    } catch (err) {
-        console.error('Error get the file:', err);
-        res.status(500).send('Error get the file');
-    }
-});
+// router.get('/get', async (req, res) => {
+//     try {
+//         // Extract the URL of the file to be deleted from the request body or query parameters
+//         const fileUrl = req.body.fileUrl || req.query.fileUrl;
+//
+//         // Extract the filename from the URL
+//         const filename: string = path.basename(fileUrl);
+//
+//         // Construct the path to the image file
+//         const imagePath: string = path.join(__dirname, '..', '..', 'public',  filename);
+//
+//
+//
+//         // Check if the file exists
+//         if (fs.existsSync(imagePath)) {
+//             // Delete the file asynchronously
+//             res.status(200).sendFile(imagePath);
+//             console.log('File get successfully');
+//         } else {
+//             // If the file doesn't exist, send an appropriate response
+//             console.log('File not found');
+//             res.status(404).send('File not found');
+//         }
+//     } catch (err) {
+//         console.error('Error get the file:', err);
+//         res.status(500).send('Error get the file');
+//     }
+// });
 export = router;

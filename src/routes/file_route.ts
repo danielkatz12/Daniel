@@ -23,12 +23,68 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage: storage});
 
+
+// /**
+//  * @swagger
+//  * tags:
+//  *   name: File
+//  *   description: File upload and management API
+//  *///TODO: WHY IS IT NOT WORKING???
+
+/**
+ * @swagger
+ * /file:
+ *   post:
+ *     summary: Upload a file
+ *     tags: [File]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       '200':
+ *         description: URL of the uploaded file
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 url:
+ *                   type: string
+ */
 router.post('/', upload.single("file"), function (req, res) {
     console.log("router.post(/file: " + base + req.file.path)
     res.status(200).send({url: base + req.file.path})
 });
 
 // Route to delete a file
+/**
+ * @swagger
+ * /file/delete-file:
+ *   delete:
+ *     summary: Delete a file
+ *     tags: [File]
+ *     parameters:
+ *       - in: query
+ *         name: fileUrl
+ *         required: true
+ *         description: URL of the file to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: File deleted successfully
+ *       '404':
+ *         description: File not found
+ *       '500':
+ *         description: Error deleting file
+ */
 router.delete('/delete-file', async (req, res) => {
     try {
         // Extract the URL of the file to be deleted from the request body or query parameters

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface UserData extends Document {
+export interface UserData {
     _id?: string;
     email: string;
     password?: string;

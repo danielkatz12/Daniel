@@ -2,6 +2,7 @@ import mongoose, {Types} from "mongoose";
 import {UserData} from "./user_model";
 
 export interface PostData {
+    _id?: string;
     city: string;
     street: string;
     streetNumber: number;

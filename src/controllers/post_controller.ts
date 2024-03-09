@@ -10,10 +10,10 @@ class PostController extends AuthBaseController<PostData> {
         super(Post);
     }
 
-    async insert(req: AuthRequest, res: Response) {
-        console.log("post:" + req.body);
-        super.insert(req, res);
-    }
+    // async insert(req: AuthRequest, res: Response) {
+    //     console.log("post:" + req.body);
+    //     super.insert(req, res);
+    // }
 
     async deleteById(req: AuthRequest, res: Response) {
         const postId = req.params.id;
@@ -49,35 +49,6 @@ class PostController extends AuthBaseController<PostData> {
             res.status(500).json({message: error.message});
         }
     }
-
-    // async deleteById(req: AuthRequest, res: Response) {
-    //     const postId = req.params.id;
-    //     const session = await startSession();
-    //     session.startTransaction();
-    //     try {
-    //         // Find all Review instances referencing the specified Post
-    //         const reviewsReferencingPost = await Review.find({post: postId}).session(session);
-    //
-    //         // Delete all associated Review instances
-    //         await Promise.all(reviewsReferencingPost.map(async (review) => {
-    //             await review.deleteOne().session(session); // Remove each associated Review instance
-    //         }));
-    //
-    //         // Delete the specified Post instance
-    //         const deletedPost = await Post.deleteOne({_id: postId}).session(session);
-    //
-    //         await session.commitTransaction();
-    //         res.status(200).json({message: "Post with ID: " + postId + " has been deleted successfully", post: deletedPost})
-    //
-    //         console.log(`Post with ID ${postId} and associated Reviews have been deleted.`);
-    //     } catch (error) {
-    //         console.error('Error deleting Post and associated Reviews:', error);
-    //         await session.abortTransaction();
-    //         res.status(500).json({message: error.message});
-    //     } finally {
-    //         session.endSession();
-    //     }
-    // }
 
     async getAllPosts(req: Request, res: Response): Promise<void> {
         const array = await Post.aggregate([
@@ -150,3 +121,31 @@ class PostController extends AuthBaseController<PostData> {
 export default new PostController();
 
 
+// async deleteById(req: AuthRequest, res: Response) {
+//     const postId = req.params.id;
+//     const session = await startSession();
+//     session.startTransaction();
+//     try {
+//         // Find all Review instances referencing the specified Post
+//         const reviewsReferencingPost = await Review.find({post: postId}).session(session);
+//
+//         // Delete all associated Review instances
+//         await Promise.all(reviewsReferencingPost.map(async (review) => {
+//             await review.deleteOne().session(session); // Remove each associated Review instance
+//         }));
+//
+//         // Delete the specified Post instance
+//         const deletedPost = await Post.deleteOne({_id: postId}).session(session);
+//
+//         await session.commitTransaction();
+//         res.status(200).json({message: "Post with ID: " + postId + " has been deleted successfully", post: deletedPost})
+//
+//         console.log(`Post with ID ${postId} and associated Reviews have been deleted.`);
+//     } catch (error) {
+//         console.error('Error deleting Post and associated Reviews:', error);
+//         await session.abortTransaction();
+//         res.status(500).json({message: error.message});
+//     } finally {
+//         session.endSession();
+//     }
+// }

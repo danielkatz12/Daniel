@@ -53,10 +53,10 @@ class ReviewController extends AuthBaseController<ReviewData> {
         }
     }
 
-    async insert(req: AuthRequest, res: Response) {
-        console.log("add review:" + req.body);
-        super.insert(req, res);
-    }
+    // async insert(req: AuthRequest, res: Response) {
+    //     console.log("add review:" + req.body);
+    //     super.insert(req, res);
+    // }
 }
 
 export default new ReviewController();

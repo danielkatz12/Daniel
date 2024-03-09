@@ -3,6 +3,7 @@ import {UserData} from "./user_model";
 import {PostData} from "./post_model"
 
 export interface ReviewData {
+    _id?: string;
     comment: string;
     post: PostData;
     user: UserData;

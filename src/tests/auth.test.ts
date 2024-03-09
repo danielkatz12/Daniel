@@ -10,6 +10,11 @@ const user = {
     password: "1234567890",
 }
 
+const user2 = {
+    email: "testUser2@test.com",
+    password: "1234567890",
+}
+
 beforeAll(async () => {
     app = await initApp();
     console.log("beforeAll");
@@ -56,21 +61,47 @@ describe("Auth tests", () => {
         expect(accessToken).toBeDefined();
     });
 
+    test("Test Login missing password", async () => {
+        const response = await request(app)
+            .post("/auth/login").send({
+                email: "test@test.com",
+            });
+        expect(response.statusCode).toBe(400);
+    });
+
+    test("Test Login incorrect email", async () => {
+        const response = await request(app)
+            .post("/auth/login").send({
+                email: "abc@gmail.com",
+                password:"123456"
+            });
+        expect(response.statusCode).toBe(401);
+    });
+
+    test("Test Login incorrect password", async () => {
+        const response = await request(app)
+            .post("/auth/login").send({
+                ...user,
+                password:"1234567"
+            });
+        expect(response.statusCode).toBe(401);
+    });
+
     test("Test forbidden access without token", async () => {
-        const response = await request(app).get("/student");
+        const response = await request(app).get("/user-profile-details");
         expect(response.statusCode).toBe(401);
     });
 
     test("Test access with valid token", async () => {
         const response = await request(app)
-            .get("/student")
+            .get("/user-profile-details")
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
     });
 
     test("Test access with invalid token", async () => {
         const response = await request(app)
-            .get("/student")
+            .get("/user-profile-details")
             .set("Authorization", "JWT 1" + accessToken);
         expect(response.statusCode).toBe(401);
     });
@@ -81,7 +112,7 @@ describe("Auth tests", () => {
         await new Promise(resolve => setTimeout(() => resolve("done"), 5000));
 
         const response = await request(app)
-            .get("/student")
+            .get("/user-profile-details")
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).not.toBe(200);
     });
@@ -99,9 +130,17 @@ describe("Auth tests", () => {
         newRefreshToken = response.body.refreshToken;
 
         const response2 = await request(app)
-            .get("/student")
+            .get("/user-profile-details")
             .set("Authorization", "JWT " + newAccessToken);
         expect(response2.statusCode).toBe(200);
+    });
+
+    test("Test invalid refresh token", async () => {
+        const response = await request(app)
+            .get("/auth/refresh")
+            .set("Authorization", "JWT " + "invalidRefreshToken")
+            .send();
+        expect(response.statusCode).toBe(401);
     });
 
     test("Test double use of refresh token", async () => {
@@ -109,7 +148,7 @@ describe("Auth tests", () => {
             .get("/auth/refresh")
             .set("Authorization", "JWT " + refreshToken)
             .send();
-        expect(response.statusCode).not.toBe(200);
+        expect(response.statusCode).not.toBe(200);//401
 
         //verify that the new token is not valid as well
         const response1 = await request(app)
@@ -117,5 +156,81 @@ describe("Auth tests", () => {
             .set("Authorization", "JWT " + newRefreshToken)
             .send();
         expect(response1.statusCode).not.toBe(200);
+    });
+
+    test("Logout without refresh token -> ERROR", async () => {
+        const response = await request(app)
+            .post("/auth/login").send(user);
+        expect(response.statusCode).toBe(200);
+        accessToken = response.body.accessToken;
+        refreshToken = response.body.refreshToken;
+        expect(accessToken).toBeDefined();
+
+        const response2 = await request(app)
+            .get("/auth/logout")
+            .set("Authorization", "JWT ")
+            .send();
+        expect(response2.statusCode).toBe(401);
+    });
+
+    test("Logout with invalid refresh token -> ERROR", async () => {
+        const response = await request(app)
+            .post("/auth/login").send(user);
+        expect(response.statusCode).toBe(200);
+        accessToken = response.body.accessToken;
+        refreshToken = response.body.refreshToken;
+        expect(accessToken).toBeDefined();
+
+        const response2 = await request(app)
+            .get("/auth/logout")
+            .set("Authorization", "JWT " + "invalidRefreshToken")
+            .send();
+        expect(response2.statusCode).toBe(401);
+    });
+
+    test("Logout successfully", async () => {
+        const response = await request(app)
+            .get("/auth/logout")
+            .set("Authorization", "JWT " + refreshToken)
+            .send();
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("Logout without exist refresh token ", async () => {
+        const response = await request(app)
+            .get("/auth/logout")
+            .set("Authorization", "JWT " + refreshToken)
+            .send();
+        expect(response.statusCode).toBe(401);
+    });
+
+    test("Test Register -> DB CONNECTION ERROR", async () => {
+        await mongoose.connection.close();
+        const response = await request(app)
+            .post("/auth/register")
+            .send(user2);
+        expect(response.statusCode).toBe(500);
+    });
+
+    test("Test Login -> DB CONNECTION ERROR", async () => {
+        const response = await request(app)
+            .post("/auth/login").send(user);
+        expect(response.statusCode).toBe(400);
+    });
+
+    test("Test Logout -> DB CONNECTION ERROR", async () => {
+        const response = await request(app)
+            .get("/auth/logout")
+            .set("Authorization", "JWT " + refreshToken)
+            .send();
+        expect(response.statusCode).toBe(401);
+    });
+
+    test("Test refresh token -> DB CONNECTION ERROR", async () => {
+        const response = await request(app)
+            .get("/auth/refresh")
+            .set("Authorization", "JWT " + refreshToken)
+            .send();
+        expect(response.statusCode).toBe(401);
     });
 });

@@ -44,7 +44,6 @@ const googleSignin = async (req: Request, res: Response) => {
 const register = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
-    const imgUrl = req.body.imgUrl;
     if (!email || !password) {
         return res.status(400).send("missing email or password");
     }
@@ -59,18 +58,16 @@ const register = async (req: Request, res: Response) => {
             {
                 'email': email,
                 'password': encryptedPassword,
-                // 'imgUrl': imgUrl//todo: to-delete
             });
         const tokens = await generateTokens(rs2)
         res.status(201).send(
             {
                 email: rs2.email,
                 _id: rs2._id,
-                // imgUrl: rs2.imgUrl,//todo: to-delete
                 ...tokens
             })
     } catch (err) {
-        return res.status(400).send("error missing email or password");
+        return res.status(500).send("error in registration process");
     }
 }
 
@@ -120,10 +117,13 @@ const login = async (req: Request, res: Response) => {
 const logout = async (req: Request, res: Response) => {
     const authHeader = req.headers['authorization'];
     const refreshToken = authHeader && authHeader.split(' ')[1]; // Bearer <token>
-    if (refreshToken == null) return res.sendStatus(401);
+    if (refreshToken == null)
+        return res.sendStatus(401);
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user: { '_id': string }) => {
-        console.log(err);
-        if (err) return res.sendStatus(401);
+        if (err) {
+            console.log(err);
+            return res.sendStatus(401);
+        }
         try {
             const userDb = await User.findOne({ '_id': user._id });
             if (!userDb.refreshTokens || !userDb.refreshTokens.includes(refreshToken)) {
@@ -137,7 +137,7 @@ const logout = async (req: Request, res: Response) => {
                 return res.sendStatus(200);
             }
         } catch (err) {
-            res.sendStatus(401).send(err.message);
+            res.status(401).send(err.message);
         }
     });
 }
@@ -168,7 +168,7 @@ const refresh = async (req: Request, res: Response) => {
                 'refreshToken': refreshToken
             });
         } catch (err) {
-            res.sendStatus(401).send(err.message);
+            res.status(401).send(err.message);
         }
     });
 }

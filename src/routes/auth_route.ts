@@ -51,25 +51,6 @@ import authController from "../controllers/auth_controller";
  *         refreshTokens: ['134r2134cr1x3c']
  */
 
-// /**
-//  * @swagger
-//  * components:
-//  *   schemas:
-//  *     User:
-//  *       type: object
-//  *       required:
-//  *         - email
-//  *       properties:
-//  *         email:
-//  *           type: string
-//  *           description: The user email
-//  *         password:
-//  *           type: string
-//  *           description: The user password
-//  *       example:
-//  *         email: 'bob@gmail.com'
-//  *         password: '123456'
-//  */
 
 /**
  * @swagger

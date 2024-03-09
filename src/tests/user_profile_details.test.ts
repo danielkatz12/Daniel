@@ -19,9 +19,11 @@ beforeAll(async () => {
     console.log("before all");
     // await UserProfileDetailsModel.deleteMany();//i dont delete all UserProfileDetails because it is the production db...
     await UserProfileDetailsModel.deleteMany({name: nameUserProfile});
-    console.log("after delete many");
+    console.log("after delete UserProfileDetails with name: " + nameUserProfile);
 
-    User.deleteMany({'email': user.email});
+    await User.deleteMany({'email': user.email});
+    console.log("after delete User with email: " + user.email);
+
     await request(app).post("/auth/register").send(user);
     const response = await request(app).post("/auth/login").send(user);
     accessToken = response.body.accessToken;
@@ -76,8 +78,15 @@ describe("User-Profile-Details tests", () => {
     test("Test GetById User-Profile-Details tests", async () => {
         const response = await request(app).get(`/user-profile-details/${userDetailsProfileForTest._id}`).set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
-        expect(response.body.length).toBe(1);
-        const userProfilesDetailsData = response.body[0];
+        const userProfilesDetailsData = response.body;
+        expect(userProfilesDetailsData.name).toBe(userDetailsProfileForTest.name);
+        expect(userProfilesDetailsData._id).toBe(userDetailsProfileForTest._id);
+    });
+
+    test("Test GetByUserId User-Profile-Details tests", async () => {
+        const response = await request(app).get(`/user-profile-details/user/${userDetailsProfileForTest.user}`).set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
+        const userProfilesDetailsData = response.body;
         expect(userProfilesDetailsData.name).toBe(userDetailsProfileForTest.name);
         expect(userProfilesDetailsData._id).toBe(userDetailsProfileForTest._id);
     });
@@ -101,6 +110,17 @@ describe("User-Profile-Details tests", () => {
         userDetailsProfileForTest.name = updatedStudent.name;
     });
 
+    test("Test UpdateByUserId tests", async () => {
+        const updatedUserProfile = {...userDetailsProfileForTest, name: "Daniel Katz2"};
+        const response = await request(app).put(`/user-profile-details/user/${userDetailsProfileForTest.user}`)
+            .set("Authorization", "JWT " + accessToken)
+            .send(updatedUserProfile);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.name).toBe(updatedUserProfile.name);
+        userDetailsProfileForTest.name = updatedUserProfile.name;
+    });
+
+
     test("Test DELETE /user-profile-details/:id}", async () => {
         const response = await request(app).delete(`/user-profile-details/${userDetailsProfileForTest._id}`).set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
@@ -108,18 +128,38 @@ describe("User-Profile-Details tests", () => {
         expect(response.body.student._id).toBe(userDetailsProfileForTest._id);
     });
 
-    test("Test Get All User-Profile-Details tests with one user-profile-details-> ERROR", async () => {
+    test("Test GetByUserId User-Profile-Details which not exist in db -> ERROR tests", async () => {
+        const response = await request(app).get(`/user-profile-details/user/${userDetailsProfileForTest.user}`).set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(404);
+    });
+
+    test("Test UpdateByUserId which not exist in db -> ERROR", async () => {
+        const updatedUserProfile = {...userDetailsProfileForTest, name: "Daniel Katz3"};
+        const response = await request(app).put(`/user-profile-details/user/${userDetailsProfileForTest.user}`)
+            .set("Authorization", "JWT " + accessToken)
+            .send(updatedUserProfile);
+        expect(response.statusCode).toBe(404);
+    });
+
+    test("Test Get All User-Profile-Details tests with one user-profile-details-> DB CONNECTION ERROR", async () => {
         await mongoose.connection.close();//סוגרת את החיבור מול הDB
         const response = await request(app).get("/user-profile-details")
             .set("Authorization", "JWT " + accessToken)
             .query({name: userProfileDetails1});
         expect(response.statusCode).toBe(500);
     });
-    test("Test GetById User-Profile-Details tests -> ERROR", async () => {
+
+    test("Test GetById User-Profile-Details tests -> DB CONNECTION ERROR", async () => {
         const response = await request(app).get(`/user-profile-details/${userDetailsProfileForTest._id}`).set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(500);
     });
-    test("Test PUT /user-profile-details/:id  ->ERROR", async () => {
+
+    test("Test GetByUserId User-Profile-Details -> DB CONNECTION ERROR", async () => {
+        const response = await request(app).get(`/user-profile-details/user/${userDetailsProfileForTest.user}`).set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(500);
+    });
+
+    test("Test PUT /user-profile-details/:id  -> DB CONNECTION ERROR", async () => {
         const updatedStudent = {...userDetailsProfileForTest, name: "Daniel Katz"};
         const response = await request(app).put(`/user-profile-details/${userDetailsProfileForTest._id}`)
             .set("Authorization", "JWT " + accessToken)
@@ -127,7 +167,15 @@ describe("User-Profile-Details tests", () => {
         expect(response.statusCode).toBe(500);
     });
 
-    test("Test DELETE /user-profile-details/:id  ->ERROR", async () => {
+    test("Test UpdateByUserId which not exist in db -> DB CONNECTION ERROR", async () => {
+        const updatedUserProfile = {...userDetailsProfileForTest, name: "Daniel Katz4"};
+        const response = await request(app).put(`/user-profile-details/user/${userDetailsProfileForTest.user}`)
+            .set("Authorization", "JWT " + accessToken)
+            .send(updatedUserProfile);
+        expect(response.statusCode).toBe(500);
+    });
+
+    test("Test DELETE /user-profile-details/:id  -> DB CONNECTION ERROR", async () => {
         const response = await request(app).delete(`/user-profile-details/${userDetailsProfileForTest._id}`).set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(500);
     });

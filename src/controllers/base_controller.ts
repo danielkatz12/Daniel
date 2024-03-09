@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {Model} from "mongoose";
+import {model, Model} from "mongoose";
 
 export class BaseController<T>{
     model: Model<T>;
@@ -9,7 +9,7 @@ export class BaseController<T>{
 
      async get(req : Request, res: Response)  {
 
-        console.log("get all Students");
+        console.log("get all Objects of Model: ");
         try {
             let students;
             if(req.query.name){
@@ -34,36 +34,36 @@ export class BaseController<T>{
     }
 
     async insert(req : Request, res: Response) {
-        console.log("post student ", req.body);
+        console.log("post object ", req.body);
         // const student = new this.model(req.body);
         try {
             // await student.save();
             const object = await this.model.create(req.body);
             res.status(201).send(object)
         } catch (err) {
-            res.status(409).send("Failed to save student... message: " + err.message);
+            res.status(409).send("Failed to save object... message: " + err.message);
         }
 
 
     }
 
    async putById(req : Request, res: Response) {
-        console.log("about to PUT/UPDATE student by ID: " + req.params.id);
+        console.log("about to PUT/UPDATE object by ID: " + req.params.id);
         try {
             // const  student = await this.model.findByIdAndUpdate(req.params.id, new Student(req.body), {returnOriginal : false});
             const  student = await this.model.findByIdAndUpdate(req.params.id, req.body, {returnOriginal : false});
-            student ?  res.status(200).json({message: "update successfully the student: ", student: student}) :  res.send("update failed for student with ID: " + req.params.id);
+            student ?  res.status(200).json({message: "update successfully the object: ", student: student}) :  res.send("update failed for object with ID: " + req.params.id);
         } catch (err) {
             res.status(500).json({message: err.message});
         }
     }
 
     async deleteById(req : Request, res: Response){
-        console.log("about to delete student with id: " + req.params.id);
+        console.log("about to delete object with id: " + req.params.id);
         try{
             const student =  await this.model.findByIdAndDelete(req.params.id);
-            console.log("deleted successfully student: ", student);
-            res.status(200).json({message: "Student with ID: " + req.params.id + " has been deleted successfully", student: student})
+            console.log("deleted successfully object: ", student);
+            res.status(200).json({message: "Object with ID: " + req.params.id + " has been deleted successfully", student: student})
         } catch (err) {
             res.status(500).json({message: err.message});
         }

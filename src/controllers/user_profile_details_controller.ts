@@ -8,15 +8,15 @@ class UserProfileDetailsController extends AuthBaseController<UserProfileDetails
         super(UserProfileDetailsModel);
     }
 
-    async insert(req: AuthRequest, res: Response) {
-        console.log("post-User-Details:" + req.body);
-        super.insert(req, res);
-    }
-
-    async deleteById(req: AuthRequest, res: Response) {
-        //todo: TO-IMPLEMENT: first you need to delete the image from the server -> transaction?
-        super.deleteById(req, res);
-    }
+    // async insert(req: AuthRequest, res: Response) {
+    //     console.log("post-User-Details:" + req.body);
+    //     super.insert(req, res);
+    // }
+    //
+    // async deleteById(req: AuthRequest, res: Response) {
+    //     //todo: TO-IMPLEMENT: first you need to delete the image from the server -> transaction?
+    //     super.deleteById(req, res);
+    // }
 
     async getByUserId(req: AuthRequest, res: Response) {
         try {

@@ -3,6 +3,7 @@ import {UserData} from "./user_model";
 
 
 export interface UserProfileDetailsData {
+    _id?: string;
     name: String;
     profileImage?: String;
     contactEmail?: String;

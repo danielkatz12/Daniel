@@ -86,6 +86,22 @@ describe("Review tests", () => {
         expect(response.body.comment).toBe(reviewForTest.comment);
     });
 
+    test("Test Get All Reviews By postId ->NOT CONNECTED ERROR", async () => {
+        await mongoose.connection.close();
+        const response = await request(app).post("/review/get-post-reviews")
+            .send({postId: reviewForTest.post});
+        expect(response.statusCode).toBe(500);
+    });
+
+
+
+    // test("Test Delete Post By Id", async () => {
+    //     const response = await request(app)
+    //         .delete(`/post/${postForTest._id}`)
+    //         .set("Authorization", "JWT " + accessToken)
+    //     expect(response.statusCode).toBe(200);
+    // });
+
 
     // test("Test Get All Reviews By postId -> ERROR DB CONNECTION", async () => {
     //     await mongoose.connection.close();

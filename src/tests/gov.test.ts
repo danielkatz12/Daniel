@@ -40,9 +40,10 @@ describe("Gov tests", () => {
     });
 
     test("Test get all streets by city name", async () => {
-        const response = await request(app).post("/gov/getStreetsByCityName")
+        const response = await request(app)
+            .post("/gov/getStreetsByCityName")
             .set("Authorization", "JWT " + accessToken)
-            .send({cityName: "חיפה"})
+            .send({cityName: "חיפה "})
         expect(response.statusCode).toBe(200);
 
     });

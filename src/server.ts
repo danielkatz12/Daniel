@@ -29,12 +29,9 @@ initApp().then((app) => {
     // }
 
 
-    if (process.env.NODE_ENV !== 'production') {
-        console.log('development');
-        http.createServer(app).listen(port, () => {//כאן אנו מריצים את האפליקציה
-            console.log(`App is now listening on port: ${port}!`)
-        }); // מכניס את האפליקציה שלי למצב של האזנה בלופ כך כשאשר היא מקבלת פניות, אז היא מטפלת בהם
-    }
+    http.createServer(app).listen(port, () => {//כאן אנו מריצים את האפליקציה
+        console.log(`App is now listening on port: ${port}!`)
+    }); // מכניס את האפליקציה שלי למצב של האזנה בלופ כך כשאשר היא מקבלת פניות, אז היא מטפלת בהם
 
     // const options = {
     //     key: fs.readFileSync('../client-key.pem'),

@@ -7,7 +7,7 @@ import userProfileDetailsRouter from "./routes/user_profile_details_route"; //מ
 import env from "dotenv";
 
 env.config();// כאן אנו טוענים את מה שבקובץ ה- env. למה שנקרא process  (שהוא למעשה הcontext של האפליקצייה- האובייקט הראשי שמריץ את האפליקצייה, ובגלל שהוא הראשי, אז הוא נגיש לכל המודולים באפליקצייה. )
-const port = process.env.PORT; //  PROCESS: THE MAIN CONTEXT of the aplication, we can call Process from each file in the project.
+// const port = process.env.PORT; //  PROCESS: THE MAIN CONTEXT of the aplication, we can call Process from each file in the project.
 
 import postRoute from "./routes/post_route";
 import authRoute from "./routes/auth_route";
@@ -70,9 +70,9 @@ const initApp = (): Promise<Express> => {
             app.use("/review", reviewRoute);
 
 
-app.listen(port, () => {
-   console.log(`App is now listening on port: ${port}!`)
-}); // מכניס את האפליקציה שלי למצב של האזנה בלופ כך כשאשר היא מקבלת פניות, אז היא מטפלת בהם
+// app.listen(port, () => {
+//    console.log(`App is now listening on port: ${port}!`)
+// }); // מכניס את האפליקציה שלי למצב של האזנה בלופ כך כשאשר היא מקבלת פניות, אז היא מטפלת בהם
 
             console.log("finish app.js")
             resolve(app);

@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 
 // const base = "http://" + process.env.DOMAIN_BASE + ":" + process.env.PORT + "/";
-const base = "https://193.106.55.228/";
+const base = "https://10.10.248.228/";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -60,6 +60,9 @@ const upload = multer({storage: storage});
  */
 router.post('/', upload.single("file"), function (req, res) {
     console.log("router.post(/file: " + base + req.file.path)
+    console.log("base: ", base);
+    console.log("base: ", req.file.path);
+    console.log("full path: ",base + req.file.path)
     res.status(200).send({url: base + req.file.path})
 });
 

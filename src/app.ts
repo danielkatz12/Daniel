@@ -69,11 +69,6 @@ const initApp = (): Promise<Express> => {
             app.use("/gov", govRoute);
             app.use("/review", reviewRoute);
 
-
-// app.listen(port, () => {
-//    console.log(`App is now listening on port: ${port}!`)
-// }); // מכניס את האפליקציה שלי למצב של האזנה בלופ כך כשאשר היא מקבלת פניות, אז היא מטפלת בהם
-
             console.log("finish app.js")
             resolve(app);
         });

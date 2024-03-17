@@ -28,15 +28,16 @@ initApp().then((app) => {
     app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
     // }
 
-
-    http.createServer(app).listen(port, () => {//כאן אנו מריצים את האפליקציה
-        console.log(`App is now listening on port: ${port}!`)
-    }); // מכניס את האפליקציה שלי למצב של האזנה בלופ כך כשאשר היא מקבלת פניות, אז היא מטפלת בהם
-
-    // const options = {
-    //     key: fs.readFileSync('../client-key.pem'),
-    //     cert: fs.readFileSync('../client-cert.pem')
-    // };
-    // https.createServer(options, app).listen(process.env.HTTPS_PORT);
+    if (process.env.NODE_ENV !== "production") {
+        http.createServer(app).listen(port, () => {//כאן אנו מריצים את האפליקציה
+            console.log(`App is now listening on port: ${port}!`)
+        }); // מכניס את האפליקציה שלי למצב של האזנה בלופ כך כשאשר היא מקבלת פניות, אז היא מטפלת בהם
+    } else {
+        const options = {
+            key: fs.readFileSync('../client-key.pem'),
+            cert: fs.readFileSync('../client-cert.pem')
+        };
+        https.createServer(options, app).listen(process.env.HTTPS_PORT);
+    }
 });
 

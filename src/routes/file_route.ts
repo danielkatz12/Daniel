@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 
 // const base = "http://" + process.env.DOMAIN_BASE + ":" + process.env.PORT + "/";
-const base = "https://10.10.248.228/";
+const base = "https://193.106.55.228/";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {

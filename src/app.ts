@@ -21,7 +21,16 @@ const initApp = (): Promise<Express> => {
         const db = mongoose.connection;//
         db.on('error', (error) => console.log(error)); //יש 2 סוגי בעיות: בעיות בהתחברות הראשונית למשל עקב פורט או כתובת לא נכןנה או שמאיזשהי סיבה אחרת לא הצלחנו להתחבר.כאן המונגוס לא ינסה להתחבר שוב!!! , => סיבה שנייה זה לאחר שכן אנחנו מחוברים לDB פתאום החיבור מפסיק עקב בעיה. כאן המונגוס ינסה להתחבר מחדש!!
         db.once('open', () => console.log("Connected to Database"));
-        mongoose.connect(process.env.DB_URL).then(() => {
+        let option: any;
+        if(process.env.NODE_ENV === 'production') {
+            const options = {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+                user: 'server',
+                pass: '123123123'
+            };
+        }
+        mongoose.connect(process.env.DB_URL, option).then(() => {
 
 
             const app = express();// למעשה הexspress היא פונקצייה שאנחנו עכשיו קוראים לה
